@@ -1,0 +1,42 @@
+---
+title: "Extra Credit: Statistical Humor Assignment"
+output: pdf_document
+---
+
+## Introduction 
+
+Laughter can help us to remember - and we wanted to give you a chance to express your creativity along with your statistical knowledge as either a meme or an original cartoon.
+
+**You may submit *one* course extra credit assignment during the semester to earn up to a 1% bump in your overall course grade (either the "Statistics is Everywhere" *or* the "Statistical Humor" assignment).** 
+
+**You are permitted to use generative AI to generate an image for this assignment.** 
+
+## Due Date
+
+Submissions are accepted on a rolling basis until **December 5th at 11:59pm.** 
+
+## Guidelines
+
+Choose a statistical concept that we have covered in class. Create an original meme or cartoon that illustrates the concept in some way.
+Find a way to incorporate humor in your illustration.
+
+Write a paragraph explaining what concept you are demonstrating and why you chose it.
+
+**Your response must be 200 words minumum.**
+
+## Requirements
+Understanding the humor of the illustration should require some understanding of the concept.
+The information should be accurate (i.e. reflect your understanding of the concept).
+
+Please refrain from strong language, sexual, or violent content.  This should be an illustration you would feel comfortable presenting in class.  
+You may take inspiration from illustrations or comics shown in class or online, but your work should be unique and your own.
+You may not work on this assignment in groups -- any group submissions will not receive credit.  
+
+If you use images of photos as part of your illustration, make sure that these are in the public domain (not copyrighted or otherwise protected). You can find public domain images on websites such as Wikicommons or other free-domain stock image websites.
+
+\newpage
+
+## Submission
+1. Format your illustration **and** your explanation as a **single pdf**. You can do this by creating a Rmd and using knitr to display your illustration with the explanation below.
+2. Log into Gradescope and select the assignment titled 'Extra Credit'. Upload the pdf manually.
+3. Find the Ed thread 'Extra Credit - Stats Humor' and post your illustration.
