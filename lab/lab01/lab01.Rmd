@@ -261,7 +261,7 @@ Once you have checked these items, you can proceed to submit your assignment.
 1. Click on the **Terminal** tab in the pane below.
 2. Copy-paste the following line of code into the terminal and press enter.
 
-cd; cd ph142-fa25/lab/lab01; python3 turn_in.py
+cd; cd ph142-sp26/lab/lab01; python3 turn_in.py
 
 3. Follow the prompts to enter your Gradescope username and password.
 **Note: the terminal will not show your password being typed out. This is intentional as a security mechanism. Type your password as indicated and hit return/enter to submit.**
