@@ -6,7 +6,7 @@ output: pdf_document
 ---
 
 ### Instructions 
-* Solutions will be released by Friday, August 29th.
+* Solutions will be released next week.
 * This semester, problem sets are for practice only and will not be turned in for marks.
 
 ```{r setup, include=FALSE}
