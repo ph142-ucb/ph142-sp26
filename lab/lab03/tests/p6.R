@@ -27,12 +27,12 @@ test = list(
         })
 
         test_that("p6e", {
-          expect_true("GeomPoint" %in% class(p6$layers[[1]]$geom))
+          expect_true("GeomPoint" %in% class(p6$layers[[1]]$geom) | "GeomPoint" %in% class(p6$layers[[2]]$geom))
           print("Checking: made a scatterplot")
         })
 
         test_that("p6f", {
-          expect_true("GeomSmooth" %in% class(p6$layers[[2]]$geom))
+          expect_true("GeomSmooth" %in% class(p6$layers[[2]]$geom) | "GeomSmooth" %in% class(p6$layers[[1]]$geom) )
           print("Checking: added a smooth line")
         })
 
