@@ -6,6 +6,7 @@ output: pdf_document
 
 Due Dates:
 
+- Group Confirmation Form: February 13th **10:00pm** (counts towards participation grade)
 - Part I: February 27th 11:59pm
 - Part II: April 3rd 11:59pm
 - Part III: May 1st **5:00pm**
