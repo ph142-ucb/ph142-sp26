@@ -46,7 +46,7 @@ Choose an American person and a Chinese person at random, and assume they are in
 **1. [1 point] What is the probability that both have type O blood?**
 
 ```{r}
-p1 <- .35*.45 # YOUR CODE HERE
+p1 <- NULL # YOUR CODE HERE
 p1
 
 
@@ -62,7 +62,7 @@ p1
 **2. [1 point] What is the probability that both have the same blood type?**
 
 ```{r}
-p2 <- .35*.45+.27*.4+.26*.11+.12*.04 # YOUR CODE HERE
+p2 <- NULL # YOUR CODE HERE
 p2
 
 
@@ -116,7 +116,7 @@ _Type your answer here, replacing this text._
 **5. [1 point] Jasmine has alleles A and O. Tyrone has alleles B and O. What is the probability that a child of these parents has blood type O?**
 
 ```{r}
-p5 <- .25 # YOUR CODE HERE
+p5 <- NULL # YOUR CODE HERE
 p5
 
 
@@ -134,7 +134,7 @@ p5
 **6. [1 point] If Jasmine and Tyrone have three children, what is the probability that all three have blood type O?**
 
 ```{r}
-p6 <- .25^3 # YOUR CODE HERE
+p6 <- NULL # YOUR CODE HERE
 p6
 
 
@@ -148,7 +148,7 @@ p6
 **7. [1 point] What is the probability that the first child has blood type O and the next two do not?**
 
 ```{r}
-p7 <- .25*.75^2 # YOUR CODE HERE
+p7 <- NULL # YOUR CODE HERE
 p7
 
 
@@ -217,7 +217,7 @@ Suppose that 1% of a large population carries antibodies to HIV in its blood.
 **10. [1 point] What is the probability that the test is positive for a randomly chosen person from this population?**
 
 ```{r}
-p10 <- .9985*.01+.0060*.99 # YOUR CODE HERE
+p10 <- NULL # YOUR CODE HERE
 p10
 
 
@@ -235,7 +235,7 @@ p10
 **11. [1 point] What is the probability that a person has the antibody, given that the test is positive? Explain in your own words what this means.**
 
 ```{r}
-p11 <- .9985*.01/(.9985*.01+.0060*.99) # YOUR CODE HERE
+p11 <- NULL # YOUR CODE HERE
 p11
 
 
@@ -261,7 +261,7 @@ _Type your answer here, replacing this text._
 **13. [1 point] Probability that all 10 have a sedentary lifestyle.**
 
 ```{r}
-p13 <- .6^10 # YOUR CODE HERE
+p13 <- NULL # YOUR CODE HERE
 p13
 
 
@@ -277,7 +277,7 @@ p13
 **14. [1 point] Probability that at least one does not have a sedentary lifestyle.**
 
 ```{r}
-p14 <- 1-.6^10 # YOUR CODE HERE
+p14 <- NULL # YOUR CODE HERE
 p14
 
 
@@ -306,7 +306,7 @@ Use R to find the standardized value z that satisfies each of the following cond
 **15. [1 point]	The probability that a randomly selected observation falls below z is 0.8.**  
 
 ```{r}
-p15 <- qnorm(.8) # YOUR CODE HERE
+p15 <- NULL # YOUR CODE HERE
 p15
 
 
@@ -322,7 +322,7 @@ p15
 **16. [1 point]	The probability that a randomly selected observation falls above z is 0.35.** 
 
 ```{r}
-p16 <- -qnorm(.35) # YOUR CODE HERE
+p16 <- NULL # YOUR CODE HERE
 p16
 
 
@@ -340,7 +340,7 @@ For babies born at full term (37 to 39 completed weeks of gestation), the distri
 **17. [1 point] What is the 25th percentile of the birthweights for full term babies?** 
 
 ```{r}
-p17 <- qnorm(.25, 3350, 440) # YOUR CODE HERE
+p17 <- NULL # YOUR CODE HERE
 p17
 
 # YOUR CODE HERE
@@ -353,7 +353,7 @@ p17
 **18. [1 point] What is the 90th percentile of the birthweights for full term babies?** 
 
 ```{r}
-p18 <- qnorm(.9, 3350, 440) # YOUR CODE HERE
+p18 <- NULL # YOUR CODE HERE
 p18
 
 # YOUR CODE HERE
@@ -366,7 +366,7 @@ p18
 **19. [1 point] What is the range of the middle 50% of birthweights for full term babies? Write this as a vector containing two values to indicate the lowerbound and upperbound of the middle 50%.**
 
 ```{r}
-p19 <- qnorm(c(.25,.75), 3350, 440) # YOUR CODE HERE
+p19 <- NULL # YOUR CODE HERE
 p19
 
 # YOUR CODE HERE
@@ -381,7 +381,7 @@ p19
 **20. [1 point] The respiratory rate per minute in newborns varies according to a distribution that is approximately Normal with mean 50 and standard deviation 5. Calculate the probability that a randomly chosen newborn has a respiratory rate of 55 breaths or more per minute (convert to a percentage and round to two decimal places).**
 
 ```{r}
-p20 <- 100-100*pnorm(55, 50, 5) # YOUR CODE HERE
+p20 <- NULL # YOUR CODE HERE
 p20
 
 # YOUR CODE HERE
@@ -394,7 +394,7 @@ p20
 **21. [1 point] Calculate the probability that a randomly chosen newborn has a respiratory rate between 40 and 55 breaths per minute (convert to a percentage and round to two decimal places).**
 
 ```{r}
-p21 <- 100*(pnorm(55,50,5)-pnorm(40,50,5)) # YOUR CODE HERE
+p21 <- NULL # YOUR CODE HERE
 p21
 
 # YOUR CODE HERE
@@ -410,7 +410,7 @@ The common fruit fly, Drosophila melanogaster, is the most studied organism in g
 **22. [1 point] Choose a male fruit fly at random. Calculate the probability that the fly you choose has a thorax longer than 1 mm (convert to a percentage and round to two decimal places).**
 
 ```{r}
-p22 <- 100-100*pnorm(1,.8,.078) # YOUR CODE HERE
+p22 <- NULL # YOUR CODE HERE
 p22
 
 # YOUR CODE HERE
@@ -429,7 +429,7 @@ How much of a difference do a couple of weeks make for birthweight? Late-preterm
 **23. What is the 25th percentile of birthweights for late-preterm babies?** 
 
 ```{r}
-p23 <- qnorm(.25,2750,560) # YOUR CODE HERE
+p23 <- NULL # YOUR CODE HERE
 p23
 
 # YOUR CODE HERE
@@ -442,7 +442,7 @@ p23
 **24. What is the 90th percentile of the birthweights for late-preterm babies?**
 
 ```{r}
-p24 <- qnorm(.9,2750,560) # YOUR CODE HERE
+p24 <- NULL # YOUR CODE HERE
 p24 
 
 # YOUR CODE HERE
@@ -455,7 +455,7 @@ p24
 **25. What is the range of the middle 50% of birthweights for late-preterm babies? Write your answer as a vector containing the lower- and upper-bounds of the middle 50%.**
 
 ```{r}
-p25 <- qnorm(c(.25,.75),2750,560) # YOUR CODE HERE
+p25 <- NULL # YOUR CODE HERE
 p25 
 
 # YOUR CODE HERE
@@ -476,7 +476,7 @@ Use the `pnorm` function to find the proportion of observations from a standard 
 **27. z $\le$ -2.25.**
 
 ```{r}
-p27 <- pnorm(-2.25,0,1) # YOUR CODE HERE
+p27 <- NULL # YOUR CODE HERE
 p27
 
 # YOUR CODE HERE
@@ -489,7 +489,7 @@ p27
 **28. z $\ge$ -2.25.**
 
 ```{r}
-p28 <- 1-pnorm(-2.25,0,1) # YOUR CODE HERE
+p28 <- NULL # YOUR CODE HERE
 p28
 
 # YOUR CODE HERE
@@ -502,7 +502,7 @@ p28
 **29. z > 1.77.**
 
 ```{r}
-p29 <- 1-pnorm(1.77,0,1) # YOUR CODE HERE
+p29 <- NULL # YOUR CODE HERE
 p29
 
 # YOUR CODE HERE
@@ -515,7 +515,7 @@ p29
 **30. -2.25 < z < 1.77.**
 
 ```{r}
-p30 <- pnorm(1.77,0,1)-pnorm(-2.25,0,1) # YOUR CODE HERE
+p30 <- NULL # YOUR CODE HERE
 p30
 
 # YOUR CODE HERE
