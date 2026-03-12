@@ -274,8 +274,6 @@ To do:
 
 - Read this Wikipedia article on data dredging: https://en.wikipedia.org/wiki/Data_dredging
 
-- Read this Vox article about the Cornell food researcher: [click here to access the article](https://edstem.org/us/courses/81908/discussion/7136513?answer=16613427)
-
 - Read this two-page ASA brief on statistical significance and p-values: https://www.amstat.org/asa/files/pdfs/P-ValueStatement.pdf
 
 **5. In your own words, what is p-hacking?**
