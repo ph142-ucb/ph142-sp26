@@ -488,8 +488,33 @@ check_problem16()
 ```
 
 
+\newpage
+
+17) Fill out the table based on the information above. Round your answers to the nearest whole number.
+
+|            |   True +     |  True - | Total   |
+|------------|--------------|---------|---------|
+| test +     |    200       |   606   |   806   |
+| test -     |     15       | 399179  | 399194  |
+| Total      |    215       | 399785  |.400000  |
 
 
+18) [1 point] Calculate the positive predictive value for this screening test.**
+
+```{r}
+p18 <- 200 / (200 + 606)
+p18
+
+```
+
+
+19) Why does the test have a high sensitivity but a low PPV?
+
+# BEGIN SOLUTION
+
+Because the disease is very rare in the population being tested.
+
+# END SOLUTION
 
 ### Check your score
 
