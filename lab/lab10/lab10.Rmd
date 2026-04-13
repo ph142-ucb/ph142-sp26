@@ -36,7 +36,7 @@ nhanes <- read_csv("data/nhanes.csv")
 nhanes <- na.omit(nhanes) # this code skip rows with missing values
 ```
 
-**1. [1 point] We are interested in looking at the systolic blood pressure, `bpxsy`, by history of smoking, `hs`. Start by generating an appropriate box plot to look at these data.**
+**1. [1 point] We are interested in looking at the systolic blood pressure, `bpxsy1`, by history of smoking, `hs`. Start by generating an appropriate box plot to look at these data.**
 
 ```{r tags=c()}
 plot1 <- NULL # YOUR CODE HERE
