@@ -1,0 +1,355 @@
+---
+title: "Expanding linear regression models"
+---
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(ggplot2)
+library(broom)
+library(dplyr)
+library(tidyr)
+library(faraway)
+library(patchwork)
+library(readxl)
+```
+
+### Goals
+So far we have looked at the simplest case of a regression model, in which we have one continuous X variable and one continuous Y variable.  Now we want to build on that base to include
+
+  - categorical predictor variables
+  - models with more variables
+
+## Categorical predictors
+If we have a predictor variable that is categorical rather than continuous we can still use a linear model to describe the relationship between x and y.
+$$y= \beta_{0} + \beta_{1}*x$$
+Consider a model where x is exposure to treatment and is coded 0= no treatment 1= treatment and y equals systolic blood pressure.
+
+$$blood pressure= \beta_{0} + \beta_{1}*treatment$$
+
+then the average expected value for blood pressure among those who had treatment would be $\beta_{0} + \beta_{1}$  and the expected value for blood pressure among those who did not have treatment would be $\beta_{0}$ (if treatment=0  the $\beta_{1}$ would be multiplied by 0)
+
+## Categorical predictors
+```{r}
+set.seed(241)
+# here I am generating a set of x that has 200 observations and has a probability of 50%
+X <- (rbinom(200, size=1, prob=.5))
+# generating a normally distributed error
+e<-rnorm(200, mean=0, sd=.8)
+## and creating Y 
+Y<-140 - X*15+e
+
+simbp <-data.frame(cbind(X,Y))
+ex1<-ggplot(simbp, aes(x=X, y=Y))+
+  geom_point()+
+  theme_minimal(base_size=15)
+```
+
+### graphically
+```{r, echo=FALSE , fig.dim(4,2.5), out.width="60%" }
+ex1
+```
+
+### graphically
+```{r, echo=FALSE, out.width="60%"}
+ ggplot(aes(x=Y), data=simbp) + 
+  geom_histogram(aes(fill=X),bins=15) + 
+  theme_minimal() +
+  facet_wrap(~X, nrow=2) +
+  labs(title = "Systolic bp by treatment", x = "treatment")
+```
+
+### linear model
+```{r}
+lm_bp<-lm(Y ~ X, data=simbp)
+tidy(lm_bp)
+glance(lm_bp)
+```
+
+
+### linear model vs t test
+```{r}
+t.test(Y ~ X, data=simbp)
+```
+
+### binary 0/1 vs 1/2 coding
+```{r}
+simbp2<-simbp%>%mutate(X2=X+1)
+lm_bp2<-lm(Y ~ X2, data=simbp2)
+coefficients(lm_bp)
+coefficients(lm_bp2)
+```
+
+How does this change the equation?  our interpretation?  Why do we generally use 0/1?
+
+## Creating a binary predictor from a continuous predictor
+Let's imagine that we are studying birthweights by gestational age.  Both are collected continuously, so we might graph these data as a scatterplot.  Here I will simulate a dataset based on the distribution of Canadian Female Singleton births (reference Michael S. Kramer et al. A New and Improved Population-based Canadian Reference for Birth Weight for Gestational Age.)[http://www.pediatrics.org/cgi/content/full/108/2/e35] and graph the results:
+
+```{r, echo=FALSE}
+refs<-read_excel("bwt_refs.xlsx")
+GA<-rep(22:43, 100)
+gas<-data.frame(GA)
+brths<-left_join(gas, refs, by="GA")%>%mutate(bwt=rnorm(2200,mean=Mean, sd=SD), premature=ifelse(GA<37, 1,0))
+```
+
+### Graph
+```{r, echo=FALSE, out.width="80%"}
+ggplot(data=brths, aes(x=GA, y=bwt))+
+  geom_point()+
+  theme_minimal(base_size=15)+
+  labs(title="Birthweight by Gestational age", x="Gestational age in weeks", y="Birthweight in grams", caption="Canadian Female Singleton births")
+```
+
+### Linear Model for birthweight by GA
+```{r}
+bwt_ga_cont<-lm(bwt~ GA, data=brths)
+tidy(bwt_ga_cont)
+glance(bwt_ga_cont)
+```
+
+### Model fit
+```{r, echo=FALSE, message=FALSE, warning=FALSE, out.width="80%"}
+
+augmented_dat1 <- augment(bwt_ga_cont)
+
+## Fitted model
+plot1 <- ggplot(augmented_dat1, aes(GA, bwt)) +
+  geom_smooth(method = "lm", se = F) +
+  geom_point() +
+  geom_segment(aes(xend = GA, yend = .fitted), lty = 2) +
+  theme_minimal(base_size = 15) +
+  labs(title = "(a) Scatter plot") 
+
+# QQ plot
+plot2 <- ggplot(augmented_dat1, aes(sample = .resid)) + 
+  geom_qq() + 
+  geom_qq_line() +
+  theme_minimal(base_size = 15) +
+  labs(y = "Residuals", x = "Theoretical quantiles", title = "(b) QQplot") 
+
+## Fitted vs. residuals
+plot3 <-ggplot(augmented_dat1, aes(y = .resid, x = .fitted)) + 
+  geom_point() + 
+  theme_minimal(base_size = 15) +
+  geom_hline(aes(yintercept = 0)) +
+  labs(y = "Residuals", x = "Fitted values", title = "(c) Fitted vs. residuals") 
+
+## Amount explained
+reshape <- augmented_dat1 %>% select(.resid, bwt) %>%
+  gather(key = "type", value = "value", bwt, .resid)
+
+plot4 <- ggplot(reshape, aes(y = value)) + 
+  geom_boxplot(aes(fill = type)) +
+  labs(title = "(d) Amount explained") +
+  theme_minimal(base_size = 15) 
+
+library(patchwork)
+plot1 + plot2 + plot3 + plot4 + plot_layout(nrow = 2) + 
+  plot_annotation(caption = "Continuous vs Continuous")
+```
+
+### What happens if we categorize? 
+We often look at birth outcomes by premature status.  If I create a 0/1 indicator variable for gestational age less than 37 weeks  the distribution looks like this:
+```{r, echo=FALSE, out.width="60%"}
+ggplot(aes(x=bwt), data=brths) + 
+  geom_histogram(aes(fill=as.factor(premature)),bins=15) + 
+  theme_minimal() +
+  facet_wrap(~premature, nrow=2) +
+  labs(title = "Birthweight by prematurity status", x = "Birthweight in grams", fill="Premature yes/no")
+```
+
+### linear model 
+```{r, echo=FALSE}
+bwt_ga_bin<-lm(bwt~ premature, data=brths)
+tidy(bwt_ga_bin)
+glance(bwt_ga_bin)
+```
+
+### t-test
+```{r, echo=FALSE}
+t.test(bwt ~ premature, data=brths)
+```
+
+
+### Model fit for binary predictor
+```{r, echo=FALSE, message=FALSE, warning=FALSE, out.width="80%"}
+
+augmented_dat1 <- augment(bwt_ga_bin)
+
+## Fitted model
+plot1 <- ggplot(augmented_dat1, aes(premature, bwt)) +
+  geom_smooth(method = "lm", se = F) +
+  geom_point() +
+  geom_segment(aes(xend = premature, yend = .fitted), lty = 2) +
+  theme_minimal(base_size = 15) +
+  labs(title = "(a) Scatter plot") 
+
+# QQ plot
+plot2 <- ggplot(augmented_dat1, aes(sample = .resid)) + 
+  geom_qq() + 
+  geom_qq_line() +
+  theme_minimal(base_size = 15) +
+  labs(y = "Residuals", x = "Theoretical quantiles", title = "(b) QQplot") 
+
+## Fitted vs. residuals
+plot3 <-ggplot(augmented_dat1, aes(y = .resid, x = .fitted)) + 
+  geom_point() + 
+  theme_minimal(base_size = 15) +
+  geom_hline(aes(yintercept = 0)) +
+  labs(y = "Residuals", x = "Fitted values", title = "(c) Fitted vs. residuals") 
+
+## Amount explained
+reshape <- augmented_dat1 %>% select(.resid, bwt) %>%
+  gather(key = "type", value = "value", bwt, .resid)
+
+plot4 <- ggplot(reshape, aes(y = value)) + 
+  geom_boxplot(aes(fill = type)) +
+  labs(title = "(d) Amount explained") +
+  theme_minimal(base_size = 15) 
+
+library(patchwork)
+plot1 + plot2 + plot3 + plot4 + plot_layout(nrow = 2) + 
+  plot_annotation(caption = "binary predictor")
+```
+
+
+## Categorical predictors with more than 2 levels
+
+### Adding categories
+Remember that a coefficient in a linear model represents the change in Y related to a one unit change in X, so how do we handle this for categories?  Even in ordinal variables - those that have an inherent order - we generally do not expect the difference between each category to be the same.  For nominal variable we would be even less comfortable with that structure....so
+
+
+### Adding categories
+As long as the categories are mutually exclusive and exhaustive we can create a series of "dummy" variables coded 0/1 that represent the categories.  
+
+$$y= \beta_{0} + \beta_{1}*category_1 + \beta_{2}*category_2 \cdot \cdot\cdot + \beta_{j}*category_{k-1}$$
+where k is the number of categories. Why do we have 1 fewer terms than categories?
+Let's look at an example...
+
+### Example:  Butterfat
+This dataset contains data on the average butterfat content of milk from random samples of diary cattle.  Data came from Canadian records of pure-bred dairy cattle 
+
+```{r}
+data(butterfat, package="faraway")
+str(butterfat)
+```
+
+### Example:  Butterfat
+We can look at the means by group here
+```{r}
+butterfat%>% 
+  group_by(Breed) %>% 
+  summarize(mean_fat = mean(Butterfat, na.rm=TRUE))
+```
+
+### Example:  Butterfat
+and graph them here:
+```{r, echo=FALSE, out.width="70%"}
+ex2<-ggplot(butterfat, aes(x=Breed, y=Butterfat))+
+  geom_point()+
+  theme_minimal(base_size=15)
+ex2
+```
+
+### Example:  Butterfat
+What does the model output look like?
+```{r}
+lm_fat<-lm(Butterfat ~ Breed, data=butterfat)
+tidy(lm_fat)
+```
+
+**where is the expected value for Ayrshire?**
+
+### choosing a different reference category
+```{r}
+butterfat_relevel <- within(butterfat, Breed <- relevel(Breed, ref = "Holstein-Fresian"))
+
+lm_fat2<-lm(Butterfat ~ Breed, data=butterfat_relevel)
+
+coefficients(lm_fat)
+coefficients(lm_fat2)
+
+```
+
+## models with more than one predictor variable
+
+### Regression line with multiple x variables
+In the simple case our regression line was:
+$$y= \beta_{0} + \beta_{1}*x$$
+in the case of multiple variables we can write this more generally as:
+
+$$y= \beta_{0} + \beta_{1}*x_{1} +\beta_{2}*x_{2} + \cdot \cdot \cdot +\beta_{p}*x_{p}$$
+
+where $p$ is the number of x variables included in the model.
+
+### interpreting the coefficients 
+In a simple model, we interpreted the $\beta$ or slope coefficient as the change in the predicted or "expected" value of y associated with a one unit change in x.
+
+When there are multiple x variables, the interpretation is that the coefficient represents the change in the expected value of y associated with a one unit change in x, **holding all other factors in the model constant** or "controlling for" the other factors in the model.
+
+
+### Example: Butterfat 
+Let's say we also suspect that there is a difference in butterfat content as cows reach maturity
+```{r}
+butterfat%>% 
+  group_by(Age) %>% 
+  summarize(mean_fat = mean(Butterfat, na.rm=TRUE))
+```
+
+### Example:  Butterfat
+Including age in the visualization by breed
+```{r, echo=FALSE, out.width="70%"}
+ex2<-ggplot(butterfat, aes(x=Breed, y=Butterfat, color=Age))+
+  geom_point()+
+  theme_minimal(base_size=15)
+ex2
+```
+
+### Butterfat model with both factors
+```{r}
+lm_fat3<-lm(Butterfat ~ Breed + Age, data=butterfat_relevel)
+tidy(lm_fat3)
+```
+
+### Butterfat model with both factors
+$$Butterfat= \beta_{0} + \beta_{1}*Breed_{1} +\beta_{2}*Breed_{2} + \beta_{3}*Breed_{3}+ \beta_{4}*Breed_{4}+ \beta_{5}*Matureage$$
+
+$$= 3.62 + 0.39*Ayrshire +0.7690*Canadian + 1.28*Guernsey+ 1.62*Jersey+ 0.10*Matureage$$
+What is $\beta_{0}$ in this model?
+
+
+### comparing any 2 groups
+What if we are interested in the difference in butterfat between milk from a young Ayrshire cow and a mature Guernsey?
+
+Young Ayrshire:
+$$E[Butterfat |Breed= Ayrshire, Age=young]= 3.62 + 0.39*Ayrshire = 4.01$$
+
+Mature Guernsey:
+$$E[Butterfat | Breed=Guernsey, Age=Mature]= 3.62 +1.28*Guernsey+ 0.10*Mature = 5$$
+
+$$E[Butterfat |Breed= Ayrshire, Age=young] - E[Butterfat | Breed=Guernsey, Age=Mature] $$
+$$= 4.01 - 5 = -0.99$$
+So the difference is 0.99 less butterfat among young Ayrshire cows compared to mature Guernseys
+
+### testing for variables with multiple categories
+When we are looking at variables that are continuous or binary [0,1] the t-test values for each $\beta$ give us a sense of the importance of each variable.  
+
+Why is this a problem in a variable with multiple categories?
+
+```{r, echo=FALSE}
+tidy(lm_fat3)
+```
+
+### comparing models f-test
+We will use the `anova()` function in r to compare a model that includes Breed to one that does not
+```{r}
+lm_fat4<-lm(Butterfat ~  Age, data=butterfat_relevel)
+
+anova(lm_fat4, lm_fat3)
+```
+
+
+### comparing models R-squared
+We might also be interested in comparing the amount of variability explained by our two models:
+
+```{r}
+glance(lm_fat4)
+glance(lm_fat3)
+```
