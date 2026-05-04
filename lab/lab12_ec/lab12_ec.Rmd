@@ -1,0 +1,249 @@
+---
+title: "Lab 12: Expanding linear regression"
+author: "Name and Student ID"
+date: "Today's Date"
+output: pdf_document
+---
+
+
+
+### Instructions 
+* This assignment is completed for **extra credit.** You can use this to make up for a lab score that you didn't receive full credit or misses (the lowest lab grade is already dropped). However if you received full credit on labs 1-10, this does not add more to your lab score, you can not get over 100%.
+* Due date: Monday, May 11th, at 10:00pm PST with 2 hour grace period.
+* Late penalty: 50% late penalty if submitted within 24 hours of due date, no marks for assignments submitted thereafter.
+* This assignment will not be submitted automatically - it will be submitted in the same maner as the data project.  Knit your file to a pdf and submit on gradescope.  You are welcome to collaborate with a partner on this lab - if you do so, please submit as a group and make sure both people are tagged on the submission.  Remember to select the pages corresponding to each answer.  The assignment will be graded for correct completion but will not be autograded.  
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyr)
+library(dplyr)
+library(knitr)
+library(broom)
+library(ggplot2)
+library(readr)
+```
+
+
+In this lab, we will review basic linear regression and begin expanding to models with multiple X variables.  In this lab we will use a dataset that is generated with simulation for demonstration purposes.  The benefit of using simulated data is that we know what the data generating process is (we create it) so it gives us a way to compare the results of our estimation against a known system.  This is not something we can do with observed data.  
+
+
+
+## The Western Collaborative Group Study Dataset
+
+The data we will look at for this week's lab we will use the data from the Western Collaborative Group Study again.   These data come from a cohort study that began in the 1960s. These data were collected prospectively to assess the effects of behavior type on coronary heart disease (CHD). At the beginning of the study, researchers enrolled 3524 men aged 39-59 who worked at a subset of corporations in California. Each individual's behavior type was assessed during an interview and all individuals were followed for 8.5 years (until 1969). Full data is available for 3142 participants. Of these, 257 (8.2%) had a CHD event.
+
+## Overview of the lab
+
+The purpose of this lab is to practice building and interpreting a linear model with more than one X variable.  To do this, we will look at the relationship between a few possible exposure variables; age (`age0`), BMI (we will construct this variable), cigarette smoking (`ncigs0`), behavior type (`behpat0`) and Serum Cholesterol(`chol0`) in a random sample of WCGS participants.
+
+Read in the data from the sample:
+
+```{r readdat, echo=F, message=F }
+
+
+dat <- read_csv("wcgs_n200.csv")
+head(dat)
+
+```
+
+
+- **Part 1** Variable manipulation
+
+Rather than look at height and weight independently we will calculate the BMI for each participant.  The BMI is the weight in kilograms divided by the height in meters squared.  Your height variable is in inches and your weight variable is in pounds so you will first need to convert the values to kilograms and meters.
+
+Create three new variables `ht_m` (height in meters), `wt_kg` (weight in kilograms) and `bmi` (Body Mass Index) that contains these calculated values (note save your dataset with the new variables as `dat2`):
+
+```{r ex1a}
+dat2<-dat ## add your code here
+```
+
+
+We will also decide to look at age and smoking in categories rather than continuous variables.  Create a variable `bmi_cat` which contains BMI in the following four categories: <18.5, 18.5 to <25, 25 to <30 and 30+
+ and create a variable `any_cigs` which should be coded 0 for non-smokers and 1 for any smoking (add these to the dataset `dat2`)
+ 
+*hint* the  cut() function can be used to create ordered categories from a numeric variable for example:
+df <- df %>%
+  mutate(`new variable` = cut(`numeric variable`, 
+                        breaks = c(-Inf, 50, 80, Inf), *tell R where to cut the categories*
+                        labels = c("Low", "Medium", "High"))) *add a label to name the categories*
+
+
+```{r ex1b}
+  ## your code here
+``` 
+
+
+# 2 Description and Visualization
+
+We might start by summarizing/exploring the data we have.  The `table()` function shows us a table with the frequency and percent of our categorical values.  Add to this description by using the summarize function to generate the five number summary of the quantitative variables in our analysis.  
+
+```{r ex2a}
+table(dat2$bmi_cat)
+table(dat2$any_cigs)
+
+# add your code here for quantitative variables
+```
+
+
+- **Exercise 2b**  
+
+Generate a visualization that explores the relationship between `age0` and `chol0` .  
+
+
+```{r ex2b}
+## your code here 
+```
+Briefly interpret your results.
+
+
+- **Exercise 2c**  Generate a visualization that explores the relationship between `bmi` and `chol0` .  
+
+```{r ex2c}
+## your code here 
+```
+Briefly interpret your results.
+
+- **Exercise 2d**  Generate a visualization that explores the relationship between `bmi_cat` and `chol0` .  
+
+```{r ex2d}
+## your code here 
+```
+Briefly interpret your results.
+
+
+- **Exercise 2e**  Generate a visualization that explores the relationship between `ncigs0` and `chol0` .  
+
+
+```{r ex2e}
+## your code here 
+```
+
+Briefly interpret your results.
+
+- **Exercise 2f**  Generate a visualization that explores the relationship between `any_cigs` and `chol0` .  
+
+
+```{r ex2f}
+## your code here 
+```
+
+Briefly interpret your results.
+
+
+
+# 3 Statistical modelling: linear regression with one x and one y
+
+While the exploratory analysis likely showed some results, we want to look at factors together in a model and statistically assess whether the findings are significant or could reasonably occur due to random chance. 
+
+
+We will first estimate a simple linear model that includes continuous age and our outcome `chol0`.
+
+- **Exercise 3a**
+```{r ex3a}
+## create the simple linear model here
+
+```
+
+Now create the simple linear model that includes only bmi and our outcome `chol0`.
+
+- **Exercise 3b**
+```{r ex3b}
+## create the simple linear model here
+
+```
+
+
+Now we create the simple linear model that includes only categorical bmi and our outcome `chol0`. Note that we are using the factor() function to estimate the categories as "dummy" categories rather than treating them as a numeric variable. 
+
+- **Exercise 3c**
+```{r ex3c}
+## create the simple linear model here
+tidy(lm(chol0 ~ factor(bmi_cat), data=dat2))
+glance(lm(chol0 ~ factor(bmi_cat), data=dat2))
+
+```
+
+Creat the simple linear model that includes only continuous number of cigaretes somked and our outcome `chol0`
+
+- **Exercise 3d**
+```{r ex3d}
+## create the simple linear model here
+
+```
+
+Now create the simple linear model that includes only categorical smoking and our outcome `chol0`.
+
+- **Exercise 3e**
+```{r ex3e}
+## create the simple linear model here
+
+```
+
+- **Exercise 4a** run a two-sample t-test for the relationship between `any_cigs` and compare the results from the linear models to the t-test results. 
+
+```{r ex4a}
+
+```
+
+Comment on what you notice.
+
+*your answer here*
+
+- **Exercise 4b** run an appropriate statistical test to compare the mean choloesterol by categorical bmi.  
+```{r ex4b}
+
+```
+
+
+- **Exercise 4c**. How do the results from the test in exercise 4b compare to the results from the linear models?
+
+
+*your answer here*
+
+
+- **Exercise 5** Adding variables in a model
+
+Now we will add more than one X variable to the model at one time.  Create a linear model with both continuous age and continuous smoking as exposures and `chol0` as the outcome.
+
+```{r ex5a}
+# your code here 
+```
+
+Now create a linear model with continuous age and categorical smoking as exposures and `chol0` as the outcome.
+```{r ex5b}
+# your code here 
+```
+
+Which model would you choose as a better fit to the data and why?
+
+*your answer here*
+
+- **Exercise 5b** 
+
+We will now compare estimates from different models for the mean cholesterol;
+
+Calculate the estimated cholesterol for a man who is 45 using the simple linear model with only continuous age as a predictor:
+
+
+*your answer here*
+
+For a man who is 45, and smokes 10 cigarettes per day calculate his estimated cholesterol using 2 different models:
+
+The model with both age and smoking as continuous variables:
+
+*your answer here*
+
+The model with age as continuous and smoking as a categorical variable:
+
+
+*your answer here*
+
+
+- **Exercise 6**
+Summarize the findings of your analysis.  
+
+*your answer here*
+
+
